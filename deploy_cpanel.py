@@ -140,6 +140,7 @@ def main():
             (os.path.join(BASE_DIR, "php_backend", "cdata.php"), f"{REMOTE_KITA}/cdata.php"),
             (os.path.join(BASE_DIR, "php_backend", "config.php"), f"{REMOTE_KITA}/config.php"),
             (os.path.join(BASE_DIR, "php_backend", "pegawaiData.json"), f"{REMOTE_KITA}/pegawaiData.json"),
+            (os.path.join(BASE_DIR, "php_backend", "cutiData.json"), f"{REMOTE_KITA}/cutiData.json"),
             (os.path.join(BASE_DIR, "php_backend", ".htaccess"), f"{REMOTE_KITA}/.htaccess"),
             (os.path.join(BASE_DIR, "database", "brmp_database.sql"), f"{REMOTE_KITA}/brmp_database.sql"),
             (os.path.join(BASE_DIR, "ADMS_SETUP.md"), f"{REMOTE_KITA}/ADMS_SETUP.md"),
