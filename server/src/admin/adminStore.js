@@ -34,3 +34,67 @@ export let agendaList = [
   { id: "AGD-002", judul: "Bimbingan Teknis Standarisasi Alat Mesin Pertanian (Alsintan)", tanggal: "2025-06-17", waktu: "08:30 - 15:30 WIB", lokasi: "Aula Laboratorium Terpadu Kalasan", pimpinan: "Ketua Tim Kerja SDM" },
   { id: "AGD-003", judul: "Kunjungan Lapangan Tim Evaluasi Pengujian Spesifik Lokasi", tanggal: "2025-06-19", waktu: "07:30 - Selesai", lokasi: "Kebun Percobaan Banyakan & Kulon Progo", pimpinan: "Kobag TU" }
 ];
+
+export let adminPaniteraList = [
+  { id: 'PEG-004', nip: '198906012015032004', nama: 'Devi Eka Nuvitasari, S.H.', jabatan: 'Analis SDM Aparatur', role: 'Panitera SPT', assignedBy: 'Administrator Sistem', assignedAt: '2026-01-10' },
+  { id: 'PEG-017', nip: '199111042023212041', nama: 'Siti Rahmawati, S.P.', jabatan: 'Penyuluh Pertanian Pertama', role: 'Panitera SPT', assignedBy: 'Administrator Sistem', assignedAt: '2026-02-15' }
+];
+
+export let adminSptList = [
+  {
+    id: 'SPT-2026-001',
+    nomorSpt: 'B-101/KP.320/H.14.7/10/2026',
+    kegiatan: 'Koordinasi Lapangan Standardisasi Instrumen Pertanian Modern di Kab. Sleman',
+    tujuan: 'Dinas Pertanian Kab. Sleman & BPP Minggir',
+    tglMulai: '2026-10-28',
+    tglSelesai: '2026-10-29',
+    durasi: '2 Hari',
+    status: 'published',
+    pemohon: 'Devi Eka Nuvitasari, S.H.',
+    peserta: ['Dr. Soeharsono, S.Pt, M.Si', 'Devi Eka Nuvitasari, S.H.', 'Romy Husodo'],
+    disetujuiOleh: 'Agung Ariyanto, SEI., M.Ec., Dev. (Kobag TU)',
+    diterbitkanAt: '2026-10-27 14:20 WIB',
+    hasQr: true
+  },
+  {
+    id: 'SPT-2026-002',
+    nomorSpt: 'B-102/KP.320/H.14.7/10/2026',
+    kegiatan: 'Monitoring Penerapan SOP Varietas Padi Unggul Ramah Lingkungan',
+    tujuan: 'Kelompok Tani Makmur Mandiri, Kab. Kulon Progo',
+    tglMulai: '2026-10-30',
+    tglSelesai: '2026-10-31',
+    durasi: '2 Hari',
+    status: 'published',
+    pemohon: 'Siti Rahmawati, S.P.',
+    peserta: ['Siti Rahmawati, S.P.', 'Triyana Handayani, A.Md'],
+    disetujuiOleh: 'Agung Ariyanto, SEI., M.Ec., Dev. (Kobag TU)',
+    diterbitkanAt: '2026-10-29 09:15 WIB',
+    hasQr: true
+  },
+  {
+    id: 'SPT-2026-003',
+    nomorSpt: '',
+    kegiatan: 'Supervisi Akreditasi Laboratorium Pengujian Benih Pertanian Terstandar',
+    tujuan: 'Balai Standardisasi Pengujian Benih, Surakarta',
+    tglMulai: '2026-11-03',
+    tglSelesai: '2026-11-05',
+    durasi: '3 Hari',
+    status: 'ready_to_issue',
+    pemohon: 'Devi Eka Nuvitasari, S.H.',
+    peserta: ['Dr. Soeharsono, S.Pt, M.Si', 'Dwi Dinia Rahayu, S.Kom, M.T.I'],
+    disetujuiOleh: 'Agung Ariyanto, SEI., M.Ec., Dev. (Kobag TU)',
+    diterbitkanAt: '-',
+    hasQr: false
+  }
+];
+
+export let adminMenimbangList = [
+  'Bahwa dalam rangka optimalisasi koordinasi standardisasi instrumen pertanian terpadu di Provinsi Daerah Istimewa Yogyakarta, dipandang perlu menugaskan pegawai yang tercantum dalam surat perintah ini.',
+  'Bahwa pegawai yang namanya tercantum dalam keputusan ini dipandang cakap dan memenuhi syarat untuk melaksanakan tugas kedinasan dimaksud.'
+];
+
+export let adminDasarList = [
+  'Undang-Undang Nomor 20 Tahun 2023 tentang Aparatur Sipil Negara.',
+  'Peraturan Menteri Pertanian Republik Indonesia Nomor 19 Tahun 2023 tentang Organisasi dan Tata Kerja Balai Besar Penerapan Standar Instrumen Pertanian.',
+  'Daftar Isian Pelaksanaan Anggaran (DIPA) Balai Besar Penerapan Modernisasi Pertanian DIY Tahun Anggaran 2026.'
+];

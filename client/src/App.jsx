@@ -166,13 +166,13 @@ export default function App() {
     if (currentView === 'spt-approval-ketimker') return 'approval-ketimker';
     if (currentView === 'spt-approval-kobag') return 'approval-kobag';
     if (currentView === 'spt-approval' || currentView === 'approval-spt') return 'approval';
-    if (currentView === 'spt-admin-sekretariat' || currentView === 'spt-admin' || currentView === 'admin-spt') return 'admin-sekretariat';
+    if (currentView === 'spt-admin-sekretariat' || currentView === 'spt-admin') return 'admin-sekretariat';
     if (currentView === 'spt-monitoring-kopoks') return 'monitoring-kopoks';
     if (currentView === 'spt-sop' || currentView === 'sop-spt') return 'sop';
     return 'dashboard';
   };
 
-  const isSptView = currentView.includes('spt');
+  const isSptView = currentView.includes('spt') && !currentView.startsWith('admin');
 
   return (
     <div className="app-shell" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--bg-app)' }}>
