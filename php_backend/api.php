@@ -1620,10 +1620,22 @@ if ($route === 'cuti' || str_starts_with($route, 'cuti/')) {
             }
         }
 
-        // Filter for current employee
+        // Filter for current employee (Robust match by NIP, ID, or Nama)
         $myHistory = [];
+        $cleanUserNip = trim($userObj['nip'] ?? '');
+        $cleanUserId = trim((string)($userObj['id'] ?? ''));
+        $cleanUserNama = trim(mb_strtolower($userObj['nama'] ?? ''));
+
         foreach ($allRows as $c) {
-            if ($c['nip'] === $userObj['nip'] || (string)$c['pegawaiId'] === (string)$userObj['id']) {
+            $cNip = trim($c['nip'] ?? '');
+            $cId = trim((string)($c['pegawaiId'] ?? ''));
+            $cNama = trim(mb_strtolower($c['nama'] ?? ''));
+
+            $match = (!empty($cleanUserNip) && $cNip === $cleanUserNip)
+                  || (!empty($cleanUserId) && $cId === $cleanUserId)
+                  || (!empty($cleanUserNama) && $cNama === $cleanUserNama);
+
+            if ($match) {
                 $myHistory[] = $c;
             }
         }

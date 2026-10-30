@@ -284,11 +284,11 @@ export const apiService = {
 
   async getCuti(nip = '', role = '') {
     try {
-      const url = new URL(`${API_BASE_URL}/cuti`);
-      if (nip) url.searchParams.append('nip', nip);
-      if (role) url.searchParams.append('role', role);
-
-      const res = await fetch(url.toString());
+      const params = new URLSearchParams();
+      if (nip) params.append('nip', nip);
+      if (role) params.append('role', role);
+      const queryStr = params.toString() ? '?' + params.toString() : '';
+      const res = await fetch(`${API_BASE_URL}/cuti${queryStr}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       return data.data;
