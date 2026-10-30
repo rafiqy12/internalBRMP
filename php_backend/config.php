@@ -58,8 +58,14 @@ if ($sqliteFile && file_exists($sqliteFile) && filesize($sqliteFile) > 0) {
     }
 }
 
-// 2. If SQLite file does not exist, try MySQL fallback
-if (!$pdo && defined('DB_HOST')) {
+// 2. Try MySQL (cPanel production host)
+if (!defined('DB_HOST')) define('DB_HOST', 'localhost');
+if (!defined('DB_NAME')) define('DB_NAME', 'brmy4429_absensi');
+if (!defined('DB_USER')) define('DB_USER', 'brmy4429_userabsen');
+if (!defined('DB_PASS')) define('DB_PASS', 'XGs!VX=I1Bmv');
+if (!defined('DB_PORT')) define('DB_PORT', '3306');
+
+if (!$pdo) {
     try {
         $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
         $options = [
