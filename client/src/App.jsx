@@ -83,8 +83,12 @@ export default function App() {
       user.systemRole === 'admin' ||
       user.role === 'admin' ||
       user.approvalRole === 'admin' ||
+      user.approvalRole === 'kepegawaian' ||
       user.nip === '198001012005011001' ||
-      user.id === 'PEG-ADM'
+      user.nip === '199005022025051006' ||
+      String(user.nama || '').toLowerCase().includes('romy') ||
+      user.id === 'PEG-ADM' ||
+      user.id === 'PEG-005'
     )
   );
 

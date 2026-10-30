@@ -446,11 +446,19 @@ export default function PengajuanCuti({ user: initialUser, onSwitchUser }) {
     currentUser?.role === 'admin' ||
     currentUser?.role === 'kepegawaian' ||
     currentUser?.nip === '198001012005011001' ||
+    currentUser?.nip === '199005022025051006' ||
+    String(currentUser?.nama || '').toLowerCase().includes('romy') ||
     String(currentUser?.divisi || '').toLowerCase().includes('kepegawaian') ||
     String(currentUser?.divisi || '').toLowerCase().includes('sumber daya manusia') ||
-    String(currentUser?.jabatan || '').toLowerCase().includes('kepegawaian');
+    String(currentUser?.jabatan || '').toLowerCase().includes('kepegawaian') ||
+    String(currentUser?.jabatan || '').toLowerCase().includes('sumber daya manusia');
 
-  const isAdmin = currentUser?.systemRole === 'admin' || currentUser?.approvalRole === 'admin';
+  const isAdmin = 
+    currentUser?.systemRole === 'admin' || 
+    currentUser?.approvalRole === 'admin' ||
+    currentUser?.nip === '198001012005011001' ||
+    currentUser?.nip === '199005022025051006' ||
+    String(currentUser?.nama || '').toLowerCase().includes('romy');
   const isVerifikator1 = isKepegawaian;
   const isVerifikator2 = isKepegawaian;
 
@@ -533,10 +541,22 @@ export default function PengajuanCuti({ user: initialUser, onSwitchUser }) {
           </div>
         </div>
 
-        <div className="brmp-card" style={{ padding: '1.25rem', borderLeft: '4px solid #f59e0b' }}>
+        <div 
+          className="brmp-card" 
+          onClick={() => { if (isKepegawaian) setActiveTab('verification'); }}
+          style={{ 
+            padding: '1.25rem', 
+            borderLeft: '4px solid #f59e0b',
+            cursor: isKepegawaian ? 'pointer' : 'default',
+            transition: 'all 0.15s ease'
+          }}
+          title={isKepegawaian ? "Klik untuk buka halaman Persetujuan / ACC Cuti" : undefined}
+        >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>Permohonan Dalam Proses</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>
+                Permohonan Dalam Proses {isKepegawaian && <strong style={{ color: '#d97706', fontSize: '0.7rem' }}>(Klik untuk ACC)</strong>}
+              </span>
               <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#d97706', margin: '4px 0 0 0' }}>
                 {allHistory.filter(c => c.status === 'dalam_proses' || c.status?.startsWith('menunggu')).length} <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#64748b' }}>Berkas</span>
               </h3>

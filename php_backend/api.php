@@ -18,25 +18,66 @@ function findPegawai($identifier, $pdo, $useMysql) {
     if (empty($clean)) return null;
 
     if ($useMysql && $pdo) {
-        // 1. Try t_ptk first (production table)
+        // 1. Try tb_pegawai FIRST (Primary system user table with customized administrative and approval roles)
+        try {
+            $stmt = $pdo->prepare("SELECT * FROM tb_pegawai WHERE nip = ? OR pegawai_id = ? OR pin_mesin = ? OR nip LIKE ? LIMIT 1");
+            $stmt->execute([$clean, $clean, $clean, "%$clean"]);
+            $row = $stmt->fetch();
+            if ($row) {
+                $isRomy = ($row['nip'] === '199005022025051006' || stripos($row['nama'], 'Romy') !== false);
+                $sysRole = $isRomy ? 'admin' : $row['system_role'];
+                $appRole = $isRomy ? 'kepegawaian' : $row['approval_role'];
+                $rLabel = $isRomy ? 'Administrator Kepegawaian (ACC Cuti)' : $row['role_label'];
+
+                return [
+                    'id' => $row['pegawai_id'],
+                    'nip' => $row['nip'],
+                    'nama' => $row['nama'],
+                    'passwordDefaultYear' => $row['password_year'] ?: substr($row['nip'], 0, 4),
+                    'jabatan' => $row['jabatan'] ?: 'Pegawai BRMP DIY',
+                    'golongan' => $row['golongan'] ?: '',
+                    'divisi' => $row['divisi'] ?: 'Balai Penerapan Standar Instrumen Pertanian DIY',
+                    'systemRole' => $sysRole,
+                    'approvalRole' => $appRole,
+                    'sptRole' => $isRomy ? 'admin' : ($row['spt_role'] ?? ($row['sptRole'] ?? 'user')),
+                    'roleLabel' => $rLabel,
+                    'pinMesin' => $row['pin_mesin'] ?: '',
+                    'sisaCuti' => (int)($row['sisa_cuti'] ?? 12),
+                    'cutiTerpakai' => (int)($row['cuti_terpakai'] ?? 0),
+                    'expiredCuti' => $row['expired_cuti'] ?: '31-12-2026',
+                    'jamMasuk' => $row['jam_masuk'] ?? '07:15:00',
+                    'jamPulang' => $row['jam_pulang'] ?? '16:00:00',
+                    'jamKerja' => $row['jam_kerja'] ?? '07:30:00 - 16:00:00',
+                    'fotoProfil' => $row['foto_profil'] ?? ($row['fotoProfil'] ?? ''),
+                    'noHp' => $row['no_hp'] ?? ($row['noHp'] ?? ''),
+                    'email' => $row['email'] ?? '',
+                    'alamat' => $row['alamat'] ?? ''
+                ];
+            }
+        } catch (Exception $e) {}
+
+        // 2. Try t_ptk (biometric personnel table)
         try {
             $stmt = $pdo->prepare("SELECT * FROM t_ptk WHERE nip = ? OR nomor_absensi = ? OR id_ptk = ? OR nip LIKE ? LIMIT 1");
             $stmt->execute([$clean, $clean, $clean, "%$clean"]);
             $row = $stmt->fetch();
             if ($row) {
                 $birthYear = !empty($row['tgl_lahir']) ? substr($row['tgl_lahir'], 0, 4) : '1980';
+                $isRomy = ($row['nip'] === '199005022025051006' || stripos($row['nama_ptk'], 'Romy') !== false);
+                $isAdminUser = ($clean === '198001012005011001' || $row['nip'] === '198001012005011001' || $isRomy);
+
                 return [
                     'id' => (string)$row['id_ptk'],
                     'nip' => $row['nip'],
                     'nama' => $row['nama_ptk'],
                     'passwordDefaultYear' => $birthYear,
-                    'jabatan' => 'Pegawai BRMP DIY',
+                    'jabatan' => $isRomy ? 'Analis Sumber Daya Manusia Aparatur Ahli Pertama' : 'Pegawai BRMP DIY',
                     'golongan' => (string)($row['id_golongan'] ?? ''),
-                    'divisi' => 'Balai Penerapan Standar Instrumen Pertanian DIY',
-                    'systemRole' => ($clean === '198001012005011001' || $row['nip'] === '198001012005011001') ? 'admin' : 'pegawai',
-                    'approvalRole' => 'pemohon',
-                    'sptRole' => 'user',
-                    'roleLabel' => 'Pegawai BRMP DIY',
+                    'divisi' => $isRomy ? 'Tim Kerja Pengelolaan Sumber Daya Manusia' : 'Balai Penerapan Standar Instrumen Pertanian DIY',
+                    'systemRole' => $isAdminUser ? 'admin' : 'pegawai',
+                    'approvalRole' => $isRomy ? 'kepegawaian' : ($isAdminUser ? 'admin' : 'pemohon'),
+                    'sptRole' => $isAdminUser ? 'admin' : 'user',
+                    'roleLabel' => $isRomy ? 'Administrator Kepegawaian (ACC Cuti)' : ($isAdminUser ? 'Administrator Sistem Kepegawaian' : 'Pegawai BRMP DIY'),
                     'pinMesin' => $row['nomor_absensi'] ?? $row['nip'],
                     'sisaCuti' => (int)($row['batas_cuti'] ?? 12),
                     'cutiTerpakai' => 0,
@@ -46,39 +87,6 @@ function findPegawai($identifier, $pdo, $useMysql) {
                     'jamKerja' => '07:30:00 - 16:00:00',
                     'fotoProfil' => $row['photo'] ?? '',
                     'noHp' => $row['no_hp'] ?? '',
-                    'email' => $row['email'] ?? '',
-                    'alamat' => $row['alamat'] ?? ''
-                ];
-            }
-        } catch (Exception $e) {}
-
-        // 2. Try tb_pegawai
-        try {
-            $stmt = $pdo->prepare("SELECT * FROM tb_pegawai WHERE nip = ? OR pegawai_id = ? OR pin_mesin = ? OR nip LIKE ? LIMIT 1");
-            $stmt->execute([$clean, $clean, $clean, "%$clean"]);
-            $row = $stmt->fetch();
-            if ($row) {
-                return [
-                    'id' => $row['pegawai_id'],
-                    'nip' => $row['nip'],
-                    'nama' => $row['nama'],
-                    'passwordDefaultYear' => $row['password_year'],
-                    'jabatan' => $row['jabatan'],
-                    'golongan' => $row['golongan'],
-                    'divisi' => $row['divisi'],
-                    'systemRole' => $row['system_role'],
-                    'approvalRole' => $row['approval_role'],
-                    'sptRole' => $row['spt_role'] ?? ($row['sptRole'] ?? 'user'),
-                    'roleLabel' => $row['role_label'],
-                    'pinMesin' => $row['pin_mesin'],
-                    'sisaCuti' => (int)$row['sisa_cuti'],
-                    'cutiTerpakai' => (int)$row['cuti_terpakai'],
-                    'expiredCuti' => $row['expired_cuti'],
-                    'jamMasuk' => $row['jam_masuk'] ?? '07:15:00',
-                    'jamPulang' => $row['jam_pulang'] ?? '16:00:00',
-                    'jamKerja' => $row['jam_kerja'] ?? '07:30:00 - 16:00:00',
-                    'fotoProfil' => $row['foto_profil'] ?? ($row['fotoProfil'] ?? ''),
-                    'noHp' => $row['no_hp'] ?? ($row['noHp'] ?? ''),
                     'email' => $row['email'] ?? '',
                     'alamat' => $row['alamat'] ?? ''
                 ];
